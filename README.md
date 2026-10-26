@@ -53,6 +53,27 @@ git clone https://github.com/jlogan839-forge/bookworm-bookstore.git
 cd bookworm-bookstore
 ```
 
+## API endpoints
+
+Base URL: http://localhost:5001
+
+| Method | Endpoint | Description | Status |
+|---|---|---|---|
+| GET | /api/health | Check that the server is running | Done |
+| GET | /api/books | List all books. Supports `?q=` (search title, author, ISBN) and `?genre=` | Done |
+| GET | /api/books/{isbn} | Get one book's details | Done |
+| GET | /api/books/{isbn}/trailer | Get the book's YouTube trailer | Planned |
+| GET | /api/books/{isbn}/reviews | List reviews for a book | Planned |
+| POST | /api/books/{isbn}/reviews | Write a review (logged-in users) | Planned |
+| POST | /api/orders | Place an order (guest or logged in) | Planned |
+| GET | /api/orders | List the logged-in user's orders | Planned |
+| GET | /api/orders/{id} | Get one order's details | Planned |
+| POST | /api/auth/register | Create an account | Planned |
+| POST | /api/auth/login | Log in | Planned |
+| GET | /api/reading-lists | List the user's reading lists | Planned |
+| POST | /api/reading-lists | Create a reading list | Planned |
+| POST | /api/assistant | Ask the AI reading assistant for recommendations | Stretch goal |
+
 ### Backend
 
 ```bash
