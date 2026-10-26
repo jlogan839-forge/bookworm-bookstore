@@ -79,11 +79,18 @@ The app runs at http://localhost:4200.
 
 ## Team workflow
 
-- Don't commit directly to `main`.
-- Create a branch for each feature: `feature/cart`, `feature/search`, etc.
-- Open a pull request when done, and have one teammate review before merging.
-- Pull from `main` often to stay up to date: `git pull origin main`
-- If you install a new Python package, update requirements: `pip freeze > requirements.txt`
+1. **Start from the latest main.** Before starting new work, switch to `main` and pull: `git checkout main` then `git pull`.
+2. **Create a feature branch.** Name it after the feature: `feature/cart`, `feature/checkout`, etc. Don't commit directly to `main`.
+3. **Commit often** with short, clear messages that start with a verb: "Add cart page," "Fix total calculation."
+4. **Open a pull request** when the feature is ready, and request a review from at least one teammate.
+5. **Squash and merge.** After approval, merge with **Squash and merge** so each feature becomes one commit on `main`. Delete the branch afterward.
+6. **Pull main again** after any merge, so everyone builds on the latest code.
+
+**Other rules**
+- If you install a new Python package, update requirements: `pip freeze > requirements.txt`. Tell the group in chat.
+- If you install a new npm package, `package.json` updates automatically. Tell the group in chat.
+- Never commit API keys. Keys go in `backend/.env`, which is ignored by Git.
+- Record any AI use in the AI usage section of this README.
 
 ## Schedule
 
