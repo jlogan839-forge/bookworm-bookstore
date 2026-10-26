@@ -8,9 +8,15 @@ Group 2 project for SWE 6623: Jack Snodgrass, Amara Bush, Sam Corella, Duane Mit
 
 ## Tech stack
 
-- **Frontend:** Angular (presentation layer)
+- **Frontend:** Angular (presentation layer) with Tailwind CSS
 - **Backend:** Python / Flask (routes, business logic, and data access layers)
 - **Database:** SQLite via Flask-SQLAlchemy
+
+## Changes from orginal proposal
+
+- Changed from Google Gemini to Claude API because group already has existing account/access
+- Backend port changed from default 5000 to 50001 because macOS uses port 500 for AirPlay.
+- TBD
 
 ## Architecture
 
@@ -87,3 +93,8 @@ The app runs at http://localhost:4200.
 | Design | Oct 25 |
 | Development | Nov 15 |
 | Testing | Dec 4 |
+
+## AI Usage
+
+- Document your AI usage here
+- 
