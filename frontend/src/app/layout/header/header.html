@@ -1,0 +1,34 @@
+<header class="border-b border-gray-200 bg-brand-50 dark:border-gray-800 dark:bg-gray-900">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+    <a routerLink="/" class="text-xl font-semibold text-brand-800 dark:text-brand-100">Bookworm</a>
+
+    <nav aria-label="Main">
+      <ul class="flex items-center gap-5">
+        <li>
+          <a routerLink="/" routerLinkActive="underline" [routerLinkActiveOptions]="{ exact: true }"
+             class="hover:underline">Catalog</a>
+        </li>
+        <li>
+          <a routerLink="/cart" routerLinkActive="underline" class="hover:underline">
+            Cart
+            <span class="ml-1 rounded-full bg-brand-600 px-2 py-0.5 text-sm text-white">{{ cartCount() }}</span>
+            <span class="sr-only">items</span>
+          </a>
+        </li>
+        <li>
+          @if (isLoggedIn()) {
+            <a routerLink="/account" routerLinkActive="underline" class="hover:underline">Account</a>
+          } @else {
+            <a routerLink="/login" routerLinkActive="underline" class="hover:underline">Log in</a>
+          }
+        </li>
+        <li>
+          <button type="button" (click)="toggleTheme()" [attr.aria-pressed]="isDark()"
+                  class="rounded border border-gray-300 px-3 py-1 dark:border-gray-600">
+            Dark mode
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
