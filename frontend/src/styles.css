@@ -1,3 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import 'tailwindcss';
+@import "tailwindcss";
+
+/* Turn on dark mode when the <html> tag has class="dark" */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Bookworm theme: change these to restyle the whole site */
+@theme {
+  --color-brand-50: #eef6f3;
+  --color-brand-100: #d3e9e1;
+  --color-brand-600: #1f6b55;
+  --color-brand-700: #185645;
+  --color-brand-800: #12423a;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+/* A clear outline on whatever has keyboard focus (NFR-09) */
+:focus-visible {
+  outline: 3px solid var(--color-brand-600);
+  outline-offset: 2px;
+}
