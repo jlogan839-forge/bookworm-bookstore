@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   imports: [RouterLink, RouterLinkActive],
@@ -8,8 +9,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './header.html',
 })
 export class Header {
-  // Placeholder until the cart owner connects the real count
-  cartCount = signal(0);
+  cart = inject(CartService);
 
   // Placeholder until login is built
   isLoggedIn = signal(false);
@@ -19,14 +19,18 @@ export class Header {
 
   constructor() {
     let saved: string | null = null;
-    try { saved = localStorage.getItem('theme'); } catch {}
+    try {
+      saved = localStorage.getItem('theme');
+    } catch {}
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     this.setDark(saved ? saved === 'dark' : prefersDark);
   }
 
   toggleTheme() {
     this.setDark(!this.isDark());
-    try { localStorage.setItem('theme', this.isDark() ? 'dark' : 'light'); } catch {}
+    try {
+      localStorage.setItem('theme', this.isDark() ? 'dark' : 'light');
+    } catch {}
   }
 
   private setDark(dark: boolean) {
