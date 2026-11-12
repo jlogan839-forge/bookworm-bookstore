@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   imports: [RouterLink, RouterLinkActive],
@@ -11,8 +12,8 @@ export class Header {
   // Placeholder until the cart owner connects the real count
   cartCount = signal(0);
 
-  // Placeholder until login is built
-  isLoggedIn = signal(false);
+  // Comes from login helper, so it updates when someone logs in or out
+  isLoggedIn = inject(AuthService).isLoggedIn;
 
   // FR-13: light/dark mode, remembered between visits
   isDark = signal(false);
