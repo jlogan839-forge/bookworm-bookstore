@@ -130,6 +130,11 @@ The app runs at http://localhost:4200.
 
 ## AI Usage
 
-- Document your AI usage here
+- Claude Code Opus 5.5 used to generate stub pages for project, based on requirements from our previous work and reviewed by Jack Snodgrass.
 - Catalog page (`feature/catalog`): Claude Code (Claude Opus 5.5) generated the catalog page, book card component, `BookService`, `Book` API type, their unit tests, and the frontend conventions sections in this README and `frontend/AGENTS.md`, based on a plan reviewed by Sam Corella.
+- Claude Code Opus 5.5 to review code and flag gaps for me to review/revise (Jack Snodgrass):
+  - frontend/src/layout/header/header.ts
+  - front/end/src/pages/account/account.ts
+  - front/end/src/pages/account/login.ts
+  - front/end/src/pages/account/register.ts
 - 
