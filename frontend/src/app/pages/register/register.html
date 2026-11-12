@@ -1,1 +1,38 @@
-<p>register works!</p>
+<div class="mx-auto max-w-sm">
+  <h1 class="text-2xl font-semibold">Create an account</h1>
+
+  @if (error()) {
+    <p role="alert" class="mt-4 rounded border border-red-300 bg-red-50 p-3 text-red-800 dark:border-red-700 dark:bg-red-950 dark:text-red-200">
+      {{ error() }}
+    </p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-6 space-y-4" novalidate>
+    <div>
+      <label for="name" class="block font-medium">Name</label>
+      <input id="name" type="text" formControlName="name" autocomplete="name"
+             class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+    </div>
+
+    <div>
+      <label for="email" class="block font-medium">Email</label>
+      <input id="email" type="email" formControlName="email" autocomplete="email"
+             class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+    </div>
+
+    <div>
+      <label for="password" class="block font-medium">Password</label>
+      <p id="password-hint" class="text-sm text-gray-600 dark:text-gray-400">Must be 8 characters minimum</p>
+      <input id="password" type="password" formControlName="password" autocomplete="new-password"
+             aria-describedby="password-hint"
+             class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+    </div>
+
+    <button type="submit" [disabled]="submitting()"
+            class="w-full rounded bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700 disabled:opacity-60">
+      {{ submitting() ? 'Creating account…' : 'Create account' }}
+    </button>
+  </form>
+
+  <p class="mt-4">Already have an account? <a routerLink="/login" class="text-brand-700 underline dark:text-brand-100">Log in</a></p>
+</div>

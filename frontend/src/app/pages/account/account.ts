@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
+  imports: [RouterLink],
   selector: 'app-account',
-  imports: [],
-  templateUrl: './account.html',
   styleUrl: './account.css',
+  templateUrl: './account.html',
 })
-export class Account {}
+export class Account {
+  auth = inject(AuthService);
+}
