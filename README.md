@@ -107,6 +107,12 @@ The app runs at http://localhost:4200.
 5. **Squash and merge.** After approval, merge with **Squash and merge** so each feature becomes one commit on `main`. Delete the branch afterward.
 6. **Pull main again** after any merge, so everyone builds on the latest code.
 
+**Frontend conventions**
+- Each backend resource gets one types file in `frontend/src/app/api/` and one service in `frontend/src/app/services/` (e.g. `book.ts` + `BookService`). Pages use services; they never call the API directly.
+- Types match the API's JSON, not the database. Change both in the same PR.
+- Business rules stay in the backend; frontend services only fetch data.
+- Full details: [frontend/AGENTS.md](frontend/AGENTS.md#api-access-bookworm-convention).
+
 **Other rules**
 - If you install a new Python package, update requirements: `pip freeze > requirements.txt`. Tell the group in chat.
 - If you install a new npm package, `package.json` updates automatically. Tell the group in chat.
@@ -125,4 +131,5 @@ The app runs at http://localhost:4200.
 ## AI Usage
 
 - Document your AI usage here
+- Catalog page (`feature/catalog`): Claude Code (Claude Opus 5.5) generated the catalog page, book card component, `BookService`, `Book` API type, their unit tests, and the frontend conventions sections in this README and `frontend/AGENTS.md`, based on a plan reviewed by Sam Corella.
 - 
