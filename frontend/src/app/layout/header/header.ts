@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   imports: [RouterLink, RouterLinkActive],
@@ -9,8 +10,8 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './header.html',
 })
 export class Header {
-  // Placeholder until the cart owner connects the real count
-  cartCount = signal(0);
+  // Number of books in the cart, from the cart helper
+  cartCount = inject(CartService).count;
 
   // Comes from login helper, so it updates when someone logs in or out
   isLoggedIn = inject(AuthService).isLoggedIn;
