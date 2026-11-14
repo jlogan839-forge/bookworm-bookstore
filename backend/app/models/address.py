@@ -1,4 +1,6 @@
 """Address model, matching the Address class in the UML diagram."""
+import re
+
 from app.extensions import db
 
 
@@ -14,8 +16,19 @@ class Address(db.Model):
 
     def update_address(self, street=None, city=None, state=None, zip=None):
         """Change any part of the address."""
-        pass
+        if street:
+            self.street = street.strip()
+        if city:
+            self.city = city.strip()
+        if state:
+            self.state = state.strip()
+        if zip:
+            self.zip = zip.strip()
 
     def validate_address(self):
-        """Check that all fields are filled in and the ZIP code is valid."""
-        pass
+        """Return (True, "") if every field is filled in and the ZIP is valid."""
+        if not all([self.street, self.city, self.state, self.zip]):
+            return False, "Please provide your full shipping address."
+        if not re.fullmatch(r"\d{5}(-\d{4})?", self.zip.strip()):
+            return False, "Enter a 5-digit ZIP code."
+        return True, ""
