@@ -16,7 +16,8 @@ Group 2 project for SWE 6623: Jack Snodgrass, Amara Bush, Sam Corella, Duane Mit
 
 - Changed from Google Gemini to Claude API because group already has existing account/access
 - Backend port changed from default 5000 to 50001 because macOS uses port 500 for AirPlay.
-- TBD
+- Added 6% sales tax to checkout
+- 
 
 ## Architecture
 
@@ -68,8 +69,9 @@ Base URL: http://localhost:5001
 | POST | /api/orders | Place an order (guest or logged in) | Planned |
 | GET | /api/orders | List the logged-in user's orders | Planned |
 | GET | /api/orders/{id} | Get one order's details | Planned |
-| POST | /api/auth/register | Create an account | Planned |
-| POST | /api/auth/login | Log in | Planned |
+| POST | /api/auth/register | Create an account | Done |
+| POST | /api/auth/login | Log in | Done |
+| GET | /api/auth/me | Get logged in user's profile (needs token) | Done |
 | GET | /api/reading-lists | List the user's reading lists | Planned |
 | POST | /api/reading-lists | Create a reading list | Planned |
 | POST | /api/assistant | Ask the AI reading assistant for recommendations | Stretch goal |
