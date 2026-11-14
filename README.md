@@ -137,4 +137,6 @@ The app runs at http://localhost:4200.
   - front/end/src/pages/account/account.ts
   - front/end/src/pages/account/login.ts
   - front/end/src/pages/account/register.ts
-- 
+- Payment and checkout design by Amara Bush: 6% sales tax, validation,
+  transaction IDs. Adapted into our model/service/route structure with Claude Code, Opus 5.5.
+  
