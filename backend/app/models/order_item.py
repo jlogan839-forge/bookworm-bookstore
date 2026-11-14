@@ -12,4 +12,4 @@ class OrderItem(db.Model):
 
     def get_subtotal(self):
         """Return quantity times unit price."""
-        pass
+        return round(self.quantity * self.unit_price, 2)

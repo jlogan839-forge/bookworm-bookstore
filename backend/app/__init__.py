@@ -34,6 +34,9 @@ def create_app():
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
 
+    from app.routes.order_routes import orders_bp
+    app.register_blueprint(orders_bp, url_prefix="/api/orders")
+
     @app.get("/api/health")
     def health():
         return {"status": "ok"}
