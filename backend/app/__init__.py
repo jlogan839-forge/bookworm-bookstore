@@ -33,9 +33,10 @@ def create_app():
     app.register_blueprint(books_bp, url_prefix="/api/books")
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
-
     from app.routes.order_routes import orders_bp
     app.register_blueprint(orders_bp, url_prefix="/api/orders")
+    from app.routes.assistant_routes import assistant_bp
+    app.register_blueprint(assistant_bp, url_prefix="/api/assistant")
 
     @app.get("/api/health")
     def health():
