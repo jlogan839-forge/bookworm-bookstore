@@ -1,0 +1,56 @@
+<div class="mx-auto max-w-2xl">
+  <h1 class="text-2xl font-semibold">Reading assistant</h1>
+  <p class="mt-2 text-gray-600 dark:text-gray-400">
+    Tell me what you like to read, and I'll suggest books from our catalog.
+  </p>
+
+  <div aria-live="polite" class="mt-6 space-y-6">
+    @for (turn of turns(); track $index) {
+      <div>
+        <p class="font-medium">You: {{ turn.question }}</p>
+
+        @if (turn.answer; as answer) {
+          <p class="mt-2">{{ answer.reply }}</p>
+          @if (answer.recommendations.length) {
+            <ul class="mt-3 space-y-2">
+              @for (rec of answer.recommendations; track rec.isbn) {
+                <li class="rounded border border-gray-200 p-3 dark:border-gray-800">
+                  <a [routerLink]="['/books', rec.isbn]" class="font-medium text-brand-700 underline dark:text-brand-100">{{ rec.title }}</a>
+                  by {{ rec.author }}
+                  <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ rec.reason }}</p>
+                </li>
+              }
+            </ul>
+          }
+        } @else {
+          <p class="mt-2 rounded border border-red-300 bg-red-50 p-3 text-red-800 dark:border-red-700 dark:bg-red-950 dark:text-red-200">
+            {{ turn.error }}
+          </p>
+        }
+      </div>
+    }
+
+    @if (loading()) {
+      <p class="text-gray-600 dark:text-gray-400">Thinking…</p>
+    }
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="send()" class="mt-6" novalidate>
+    <label for="question" class="block font-medium">Your question</label>
+    <div class="mt-1 flex gap-2">
+      <input id="question" formControlName="question" maxlength="500"
+             placeholder="I loved Dune. What should I read next?"
+             class="flex-1 rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+      <button type="submit" [disabled]="loading()"
+              class="rounded bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700 disabled:opacity-60">
+        Ask
+      </button>
+    </div>
+    @if (error()) {
+      <p role="alert" class="mt-2 text-red-800 dark:text-red-200">{{ error() }}</p>
+    }
+    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      Powered by Claude. Suggestions come only from books in our catalog.
+    </p>
+  </form>
+</div>
