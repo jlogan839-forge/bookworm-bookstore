@@ -15,6 +15,8 @@ const BOOK: Book = {
   inStock: true,
   description: null,
   coverUrl: null,
+  averageRating: 4.2,
+  reviewCount: 13,
 };
 
 describe('BookCard', () => {
@@ -57,6 +59,16 @@ describe('BookCard', () => {
     fixture.componentInstance.addToCart.subscribe((b) => emitted.push(b));
     el.querySelector('button')!.click();
     expect(emitted).toEqual([BOOK]);
+  });
+
+  it('shows the average rating and review count', async () => {
+    await render(BOOK);
+    expect(el.textContent).toContain('4.2 (13 reviews)');
+  });
+
+  it('says when a book has no reviews yet', async () => {
+    await render({ ...BOOK, averageRating: null, reviewCount: 0 });
+    expect(el.textContent).toContain('No reviews yet');
   });
 
   it('shows a placeholder when there is no cover', async () => {

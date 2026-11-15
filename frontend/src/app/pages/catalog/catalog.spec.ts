@@ -23,6 +23,8 @@ function makeBook(overrides: Partial<Book>): Book {
     inStock: true,
     description: null,
     coverUrl: null,
+    averageRating: null,
+    reviewCount: 0,
     ...overrides,
   };
 }

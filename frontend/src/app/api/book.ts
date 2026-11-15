@@ -16,6 +16,9 @@ export interface Book {
   inStock: boolean;
   description: string | null;
   coverUrl: string | null;
+  /** Average star rating (1-5, one decimal place). null when the book has no reviews yet. */
+  averageRating: number | null;
+  reviewCount: number;
 }
 
 /** Query parameters accepted by GET /api/books. Search and genre can be combined. */

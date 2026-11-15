@@ -3,11 +3,12 @@ import { ChangeDetectionStrategy, Component, input, output, signal } from '@angu
 import { RouterLink } from '@angular/router';
 
 import { Book } from '../../api/book';
+import { StarRating } from '../star-rating/star-rating';
 
-/** One book in a grid: cover, title, author, price, stock, and an add-to-cart button. */
+/** One book in a grid: cover, title, author, rating, price, stock, and an add-to-cart button. */
 @Component({
   selector: 'app-book-card',
-  imports: [CurrencyPipe, NgOptimizedImage, RouterLink],
+  imports: [CurrencyPipe, NgOptimizedImage, RouterLink, StarRating],
   templateUrl: './book-card.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
