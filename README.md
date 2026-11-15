@@ -88,6 +88,22 @@ python run.py
 
 The API runs at http://localhost:5001.
 
+#### Book catalog
+
+The catalog is about 1000 real books in 20 genres from the [Open Library API](https://openlibrary.org/developers/api). They're saved in `backend/app/data/books.json`, and the app loads them into SQLite the first time it starts, so it never needs to reach Open Library itself. Prices and stock counts are made up, because Open Library doesn't have them. Cover images are loaded from Open Library's cover server.
+
+**To reload the catalog** (for example after pulling a new `books.json`), stop the server, delete `backend/instance/bookworm.db`, and run `python run.py` again. This also deletes accounts and orders in your local database.
+
+**To rebuild `books.json`** from Open Library (only needed to change the genres or book count):
+
+```bash
+cd backend
+python scripts/import_books.py                  # 20 genres x 50 books, about 10-15 minutes
+python scripts/import_books.py --per-genre 10   # smaller catalog, a few minutes
+```
+
+The genres and their Open Library search queries are in `GENRES` in `backend/app/services/open_library_service.py`.
+
 ### Frontend
 
 In a second terminal:
@@ -142,6 +158,7 @@ The app runs at http://localhost:4200.
 - Payment and checkout design by Amara Bush: 6% sales tax, validation,
   transaction IDs. Adapted into our model/service/route structure with Claude Code, Opus 5.5.
 - Chat assistant built, debugged, and tested by Jack Snodgrass, used Claude Code Opus 5.5 to review and flag inconsistencies.
+- Book catalog import (`feature/book-import`): Claude Code (Claude Opus 5.5) wrote the Open Library importer, the `import_books.py` script, the JSON-based seeding, the assistant's random catalog sample, and the Book catalog section of this README, based on a plan reviewed by Sam Corella.
 - 
 
   
