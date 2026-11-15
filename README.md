@@ -66,9 +66,9 @@ Base URL: http://localhost:5001
 | GET | /api/books/{isbn}/trailer | Get the book's YouTube trailer | Planned |
 | GET | /api/books/{isbn}/reviews | List reviews for a book | Planned |
 | POST | /api/books/{isbn}/reviews | Write a review (logged-in users) | Planned |
-| POST | /api/orders | Place an order (guest or logged in) | Planned |
+| POST | /api/orders | Place an order (guest or logged in) | Done |
 | GET | /api/orders | List the logged-in user's orders | Planned |
-| GET | /api/orders/{id} | Get one order's details | Planned |
+| GET | /api/orders/{id} | Get one order's details | Done |
 | POST | /api/auth/register | Create an account | Done |
 | POST | /api/auth/login | Log in | Done |
 | GET | /api/auth/me | Get logged in user's profile (needs token) | Done |
