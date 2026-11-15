@@ -61,12 +61,14 @@ Base URL: http://localhost:5001
 | Method | Endpoint | Description | Status |
 |---|---|---|---|
 | GET | /api/health | Check that the server is running | Done |
-| GET | /api/books | List books, one page at a time. Supports `?q=` (search title, author, ISBN), `?genre=`, `?page=` and `?per_page=` (default 24, max 100), in any combination. Returns `{ items, total, page, perPage, totalPages }` | Done |
+| GET | /api/books | List books, one page at a time. Supports `?q=` (search title, author, ISBN), `?genre=`, `?page=` and `?per_page=` (default 24, max 100), in any combination. Returns `{ items, total, page, perPage, totalPages }`. Each book includes `averageRating` (null if no reviews) and `reviewCount` | Done |
 | GET | /api/books/genres | List every genre with its book count: `[{ genre, count }]` | Done |
 | GET | /api/books/{isbn} | Get one book's details | Done |
 | GET | /api/books/{isbn}/trailer | Get the book's YouTube trailer | Planned |
-| GET | /api/books/{isbn}/reviews | List reviews for a book | Planned |
-| POST | /api/books/{isbn}/reviews | Write a review (logged-in users) | Planned |
+| GET | /api/books/{isbn}/reviews | List reviews for a book, newest first | Done |
+| POST | /api/books/{isbn}/reviews | Write a review: `{ rating, reviewText }`, 1-5 stars, up to 1000 characters, one per customer per book (needs token) | Done |
+| PUT | /api/reviews/{id} | Edit your own review (needs token) | Done |
+| DELETE | /api/reviews/{id} | Delete your own review (needs token) | Done |
 | POST | /api/orders | Place an order (guest or logged in) | Done |
 | GET | /api/orders | List the logged-in user's orders | Planned |
 | GET | /api/orders/{id} | Get one order's details | Done |
@@ -88,6 +90,15 @@ python run.py
 ```
 
 The API runs at http://localhost:5001.
+
+#### Tests
+
+```bash
+cd backend
+python -m pytest
+```
+
+Tests use a fresh in-memory database, so they never touch `instance/bookworm.db`.
 
 #### Book catalog
 
@@ -161,6 +172,4 @@ The app runs at http://localhost:4200.
 - Chat assistant built, debugged, and tested by Jack Snodgrass, used Claude Code Opus 5.5 to review and flag inconsistencies.
 - Book catalog import (`feature/book-import`): Claude Code (Claude Opus 5.5) wrote the Open Library importer, the `import_books.py` script, the JSON-based seeding, the assistant's random catalog sample, and the Book catalog section of this README, based on a plan reviewed by Sam Corella.
 - Catalog pagination (`feature/catalog-pagination`): Claude Code (Claude Opus 5.5) wrote the combined search and genre filter, pagination, and genres endpoint in the backend, the matching `BookService`, `Book` API type, and catalog page changes, their unit tests, and the API table updates in this README, based on a plan reviewed by Sam Corella.
-- 
-
-  
+- Book reviews (`feature/reviews`): Claude Code (Claude Opus 5.5) implemented `submit_review`, `edit_review`, and `delete_review`, the review service and endpoints, average ratings on book responses, the backend pytest setup and tests, the book detail page with the review form, the star rating component, `ReviewService`, the `Review` API type, their unit tests, and the README updates, based on a plan reviewed by Sam Corella.
