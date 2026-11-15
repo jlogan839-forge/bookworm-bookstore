@@ -6,6 +6,7 @@ import { Checkout } from './pages/checkout/checkout';
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Account } from './pages/account/account';
+import { Assistant } from './pages/assistant/assistant';
 
 // Each web address opens one page
 export const routes: Routes = [
@@ -16,5 +17,6 @@ export const routes: Routes = [
   { path: 'login', component: Login, title: 'Log in | Bookworm' },
   { path: 'register', component: Register, title: 'Sign up | Bookworm' },
   { path: 'account', component: Account, title: 'Account | Bookworm' },
+  { path: 'assistant', component: Assistant, title: 'Reading assistant | Bookworm' },
   { path: '**', redirectTo: '' }, // any unknown address goes to the catalog
 ];
