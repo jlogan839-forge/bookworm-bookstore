@@ -74,7 +74,7 @@ Base URL: http://localhost:5001
 | GET | /api/auth/me | Get logged in user's profile (needs token) | Done |
 | GET | /api/reading-lists | List the user's reading lists | Planned |
 | POST | /api/reading-lists | Create a reading list | Planned |
-| POST | /api/assistant | Ask the AI reading assistant for recommendations | Stretch goal |
+| POST | /api/assistant | Ask the AI reading assistant for recommendations | Done |
 
 ### Backend
 
@@ -141,4 +141,7 @@ The app runs at http://localhost:4200.
   - front/end/src/pages/account/register.ts
 - Payment and checkout design by Amara Bush: 6% sales tax, validation,
   transaction IDs. Adapted into our model/service/route structure with Claude Code, Opus 5.5.
+- Chat assistant built, debugged, and tested by Jack Snodgrass, used Claude Code Opus 5.5 to review and flag inconsistencies.
+- 
+
   
