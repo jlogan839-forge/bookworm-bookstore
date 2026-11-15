@@ -61,7 +61,8 @@ Base URL: http://localhost:5001
 | Method | Endpoint | Description | Status |
 |---|---|---|---|
 | GET | /api/health | Check that the server is running | Done |
-| GET | /api/books | List all books. Supports `?q=` (search title, author, ISBN) and `?genre=` | Done |
+| GET | /api/books | List books, one page at a time. Supports `?q=` (search title, author, ISBN), `?genre=`, `?page=` and `?per_page=` (default 24, max 100), in any combination. Returns `{ items, total, page, perPage, totalPages }` | Done |
+| GET | /api/books/genres | List every genre with its book count: `[{ genre, count }]` | Done |
 | GET | /api/books/{isbn} | Get one book's details | Done |
 | GET | /api/books/{isbn}/trailer | Get the book's YouTube trailer | Planned |
 | GET | /api/books/{isbn}/reviews | List reviews for a book | Planned |
@@ -159,6 +160,7 @@ The app runs at http://localhost:4200.
   transaction IDs. Adapted into our model/service/route structure with Claude Code, Opus 5.5.
 - Chat assistant built, debugged, and tested by Jack Snodgrass, used Claude Code Opus 5.5 to review and flag inconsistencies.
 - Book catalog import (`feature/book-import`): Claude Code (Claude Opus 5.5) wrote the Open Library importer, the `import_books.py` script, the JSON-based seeding, the assistant's random catalog sample, and the Book catalog section of this README, based on a plan reviewed by Sam Corella.
+- Catalog pagination (`feature/catalog-pagination`): Claude Code (Claude Opus 5.5) wrote the combined search and genre filter, pagination, and genres endpoint in the backend, the matching `BookService`, `Book` API type, and catalog page changes, their unit tests, and the API table updates in this README, based on a plan reviewed by Sam Corella.
 - 
 
   
