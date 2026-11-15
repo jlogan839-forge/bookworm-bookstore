@@ -1,1 +1,96 @@
-<p>catalog works!</p>
+<h1 class="text-3xl font-semibold text-brand-800 dark:text-brand-100">Catalog</h1>
+
+<form
+  role="search"
+  class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end"
+  (submit)="search($event)"
+>
+  <div class="flex flex-1 flex-col gap-1">
+    <label for="catalog-search" class="text-sm font-medium">Search by title, author, or ISBN</label>
+    <div class="flex gap-2">
+      <input
+        id="catalog-search"
+        type="search"
+        [formControl]="searchControl"
+        autocomplete="off"
+        class="w-full rounded border border-gray-400 bg-white px-3 py-2 dark:border-gray-600 dark:bg-gray-900"
+      />
+      <button
+        type="submit"
+        class="rounded bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700"
+      >
+        Search
+      </button>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-1 sm:w-56">
+    <label for="catalog-genre" class="text-sm font-medium">Genre</label>
+    <select
+      id="catalog-genre"
+      (change)="selectGenre($event)"
+      class="rounded border border-gray-400 bg-white px-3 py-2 dark:border-gray-600 dark:bg-gray-900"
+    >
+      <option value="" [selected]="!genre()">All genres</option>
+      @for (g of genreOptions(); track g) {
+        <option [value]="g" [selected]="g === genre()">{{ g }}</option>
+      }
+    </select>
+  </div>
+</form>
+
+<div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+  <p aria-live="polite" class="text-gray-700 dark:text-gray-300">{{ resultsSummary() }}</p>
+  @if (hasFilters()) {
+    <button type="button" (click)="clearFilters()" class="text-brand-700 underline dark:text-brand-100">
+      Clear filters
+    </button>
+  }
+</div>
+
+<p aria-live="polite" class="mt-2 text-sm text-gray-700 dark:text-gray-300">{{ cartMessage() }}</p>
+
+<section aria-label="Books" class="mt-4" [attr.aria-busy]="books.isLoading()">
+  @if (books.isLoading()) {
+    <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4" aria-hidden="true">
+      @for (i of skeletons; track i) {
+        <li class="animate-pulse rounded-lg border border-gray-200 dark:border-gray-800">
+          <div class="aspect-[2/3] bg-gray-200 dark:bg-gray-800"></div>
+          <div class="space-y-2 p-4">
+            <div class="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-800"></div>
+            <div class="h-3 w-1/2 rounded bg-gray-200 dark:bg-gray-800"></div>
+          </div>
+        </li>
+      }
+    </ul>
+  } @else if (books.error()) {
+    <div role="alert" class="rounded-lg border border-red-300 bg-red-50 p-6 text-red-900 dark:border-red-800 dark:bg-red-950 dark:text-red-100">
+      <p class="font-medium">We couldn't load the catalog.</p>
+      <p class="mt-1 text-sm">Make sure the backend is running at localhost:5001, then try again.</p>
+      <button
+        type="button"
+        (click)="books.reload()"
+        class="mt-4 rounded bg-red-700 px-4 py-2 font-medium text-white hover:bg-red-800"
+      >
+        Retry
+      </button>
+    </div>
+  } @else if (visibleBooks().length === 0) {
+    <div class="rounded-lg border border-gray-200 p-6 text-center dark:border-gray-800">
+      <p class="font-medium">No books match your search.</p>
+      @if (hasFilters()) {
+        <button type="button" (click)="clearFilters()" class="mt-3 text-brand-700 underline dark:text-brand-100">
+          Clear filters
+        </button>
+      }
+    </div>
+  } @else {
+    <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      @for (book of visibleBooks(); track book.isbn) {
+        <li>
+          <app-book-card [book]="book" (addToCart)="onAddToCart($event)" />
+        </li>
+      }
+    </ul>
+  }
+</section>

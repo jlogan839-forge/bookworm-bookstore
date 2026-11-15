@@ -1,1 +1,103 @@
-<p>checkout works!</p>
+<!-- Checkouts uses if/else if/else to check for three conditions of checkout page, cart is empty, cart has books, and order placed. -->
+@if (confirmation(); as order) {
+  <section aria-labelledby="confirm-heading" class="mx-auto max-w-lg">
+    <h1 id="confirm-heading" class="text-2xl font-semibold">Thank you! Your order is placed.</h1>
+    <dl class="mt-6 space-y-2">
+      <div><dt class="inline font-medium">Order number: </dt><dd class="inline">{{ order.orderId }}</dd></div>
+      <div><dt class="inline font-medium">Subtotal: </dt><dd class="inline">{{ order.subtotal | currency }}</dd></div>
+      <div><dt class="inline font-medium">Tax: </dt><dd class="inline">{{ order.tax | currency }}</dd></div>
+      <div><dt class="inline font-medium">Total: </dt><dd class="inline">{{ order.total | currency }}</dd></div>
+      <div><dt class="inline font-medium">Paid with card ending in: </dt><dd class="inline">{{ order.cardLast4 }}</dd></div>
+      <div><dt class="inline font-medium">Transaction ID: </dt><dd class="inline">{{ order.transaction.transactionId }}</dd></div>
+    </dl>
+    <a routerLink="/" class="mt-6 inline-block text-brand-700 underline dark:text-brand-100">Keep shopping</a>
+  </section>
+} @else if (cart.items().length === 0) {
+  <h1 class="text-2xl font-semibold">Checkout</h1>
+  <p class="mt-4">Your cart is empty. <a routerLink="/" class="text-brand-700 underline dark:text-brand-100">Browse books</a></p>
+} @else {
+  <h1 class="text-2xl font-semibold">Checkout</h1>
+
+  <div class="mt-6 grid gap-8 md:grid-cols-2">
+    <section aria-labelledby="summary-heading">
+      <h2 id="summary-heading" class="text-lg font-semibold">Order summary</h2>
+      <ul class="mt-3 divide-y divide-gray-200 dark:divide-gray-800">
+        @for (item of cart.items(); track item.isbn) {
+          <li class="flex justify-between py-2">
+            <span>{{ item.title }} × {{ item.quantity }}</span>
+            <span>{{ item.price * item.quantity | currency }}</span>
+          </li>
+        }
+      </ul>
+      <p class="mt-3 font-medium">Subtotal: {{ cart.subtotal() | currency }}</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Tax is added when you place the order.</p>
+    </section>
+
+    <section aria-labelledby="form-heading">
+      <h2 id="form-heading" class="text-lg font-semibold">Your details</h2>
+
+      @if (error()) {
+        <p role="alert" class="mt-3 rounded border border-red-300 bg-red-50 p-3 text-red-800 dark:border-red-700 dark:bg-red-950 dark:text-red-200">
+          {{ error() }}
+        </p>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="mt-3 space-y-4" novalidate>
+        <div>
+          <label for="email" class="block font-medium">Email</label>
+          <input id="email" type="email" formControlName="email" autocomplete="email"
+                 class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+        </div>
+
+        <fieldset class="space-y-4">
+          <legend class="font-semibold">Shipping address</legend>
+          <div>
+            <label for="street" class="block font-medium">Street</label>
+            <input id="street" formControlName="street" autocomplete="street-address"
+                   class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label for="city" class="block font-medium">City</label>
+              <input id="city" formControlName="city" autocomplete="address-level2"
+                     class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+            </div>
+            <div>
+              <label for="state" class="block font-medium">State</label>
+              <input id="state" formControlName="state" autocomplete="address-level1"
+                     class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+            </div>
+            <div>
+              <label for="zip" class="block font-medium">ZIP</label>
+              <input id="zip" formControlName="zip" inputmode="numeric" autocomplete="postal-code"
+                     class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="space-y-4">
+          <legend class="font-semibold">Payment</legend>
+          <p id="payment-note" class="text-sm text-gray-600 dark:text-gray-400">
+            No real payment is taken.
+          </p>
+          <div>
+            <label for="cardholderName" class="block font-medium">Name on card</label>
+            <input id="cardholderName" formControlName="cardholderName" autocomplete="cc-name"
+                   class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+          </div>
+          <div>
+            <label for="cardNumber" class="block font-medium">Card number</label>
+            <input id="cardNumber" formControlName="cardNumber" inputmode="numeric" autocomplete="cc-number"
+                   aria-describedby="payment-note"
+                   class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900" />
+          </div>
+        </fieldset>
+
+        <button type="submit" [disabled]="submitting()"
+                class="w-full rounded bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700 disabled:opacity-60">
+          {{ submitting() ? 'Placing order…' : 'Place order' }}
+        </button>
+      </form>
+    </section>
+  </div>
+}

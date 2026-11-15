@@ -5,7 +5,7 @@
     <li class="flex items-center justify-between py-4">
       <div>
         <p class="font-medium">{{ item.title }}</p>
-        <p class="text-sm text-gray-500">{{ item.author }} · Qty {{ item.quantity }}</p>
+        <p class="text-sm text-gray-500">Qty {{ item.quantity }}</p>
       </div>
       <div class="flex items-center gap-4">
         <span>{{ item.price * item.quantity | currency }}</span>
@@ -23,4 +23,4 @@
   }
 </ul>
 
-<p class="mt-6 text-right text-lg font-semibold">Total: {{ cart.total() | currency }}</p>
+<p class="mt-6 text-right text-lg font-semibold">Total: {{ cart.subtotal() | currency }}</p>

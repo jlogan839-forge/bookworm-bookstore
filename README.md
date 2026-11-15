@@ -16,7 +16,8 @@ Group 2 project for SWE 6623: Jack Snodgrass, Amara Bush, Sam Corella, Duane Mit
 
 - Changed from Google Gemini to Claude API because group already has existing account/access
 - Backend port changed from default 5000 to 50001 because macOS uses port 500 for AirPlay.
-- TBD
+- Added 6% sales tax to checkout
+- 
 
 ## Architecture
 
@@ -65,14 +66,15 @@ Base URL: http://localhost:5001
 | GET | /api/books/{isbn}/trailer | Get the book's YouTube trailer | Planned |
 | GET | /api/books/{isbn}/reviews | List reviews for a book | Planned |
 | POST | /api/books/{isbn}/reviews | Write a review (logged-in users) | Planned |
-| POST | /api/orders | Place an order (guest or logged in) | Planned |
+| POST | /api/orders | Place an order (guest or logged in) | Done |
 | GET | /api/orders | List the logged-in user's orders | Planned |
-| GET | /api/orders/{id} | Get one order's details | Planned |
-| POST | /api/auth/register | Create an account | Planned |
-| POST | /api/auth/login | Log in | Planned |
+| GET | /api/orders/{id} | Get one order's details | Done |
+| POST | /api/auth/register | Create an account | Done |
+| POST | /api/auth/login | Log in | Done |
+| GET | /api/auth/me | Get logged in user's profile (needs token) | Done |
 | GET | /api/reading-lists | List the user's reading lists | Planned |
 | POST | /api/reading-lists | Create a reading list | Planned |
-| POST | /api/assistant | Ask the AI reading assistant for recommendations | Stretch goal |
+| POST | /api/assistant | Ask the AI reading assistant for recommendations | Done |
 
 ### Backend
 
@@ -107,6 +109,12 @@ The app runs at http://localhost:4200.
 5. **Squash and merge.** After approval, merge with **Squash and merge** so each feature becomes one commit on `main`. Delete the branch afterward.
 6. **Pull main again** after any merge, so everyone builds on the latest code.
 
+**Frontend conventions**
+- Each backend resource gets one types file in `frontend/src/app/api/` and one service in `frontend/src/app/services/` (e.g. `book.ts` + `BookService`). Pages use services; they never call the API directly.
+- Types match the API's JSON, not the database. Change both in the same PR.
+- Business rules stay in the backend; frontend services only fetch data.
+- Full details: [frontend/AGENTS.md](frontend/AGENTS.md#api-access-bookworm-convention).
+
 **Other rules**
 - If you install a new Python package, update requirements: `pip freeze > requirements.txt`. Tell the group in chat.
 - If you install a new npm package, `package.json` updates automatically. Tell the group in chat.
@@ -124,5 +132,16 @@ The app runs at http://localhost:4200.
 
 ## AI Usage
 
-- Document your AI usage here
+- Claude Code Opus 5.5 used to generate stub pages for project, based on requirements from our previous work and reviewed by Jack Snodgrass.
+- Catalog page (`feature/catalog`): Claude Code (Claude Opus 5.5) generated the catalog page, book card component, `BookService`, `Book` API type, their unit tests, and the frontend conventions sections in this README and `frontend/AGENTS.md`, based on a plan reviewed by Sam Corella.
+- Claude Code Opus 5.5 to review code and flag gaps for me to review/revise (Jack Snodgrass):
+  - frontend/src/layout/header/header.ts
+  - front/end/src/pages/account/account.ts
+  - front/end/src/pages/account/login.ts
+  - front/end/src/pages/account/register.ts
+- Payment and checkout design by Amara Bush: 6% sales tax, validation,
+  transaction IDs. Adapted into our model/service/route structure with Claude Code, Opus 5.5.
+- Chat assistant built, debugged, and tested by Jack Snodgrass, used Claude Code Opus 5.5 to review and flag inconsistencies.
 - 
+
+  
