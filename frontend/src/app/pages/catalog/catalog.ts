@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,6 +14,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { Book } from '../../api/book';
 import { BookCard } from '../../components/book-card/book-card';
 import { BookService } from '../../services/book.service';
+import { CartService } from '../../services/cart.service';
 
 /**
  * FR-01 (search) and FR-02 (browse by genre).
@@ -24,6 +32,7 @@ export class Catalog {
   private readonly bookService = inject(BookService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  cart = inject(CartService);
 
   private readonly queryParams = toSignal(this.route.queryParamMap, { requireSync: true });
   protected readonly q = computed(() => this.queryParams().get('q')?.trim() ?? '');
@@ -40,7 +49,9 @@ export class Catalog {
   // TODO: replace with a GET /api/books/genres endpoint once the backend has one.
   private readonly genres = rxResource({
     stream: () =>
-      this.bookService.getBooks().pipe(map((books) => [...new Set(books.map((b) => b.genre))].sort())),
+      this.bookService
+        .getBooks()
+        .pipe(map((books) => [...new Set(books.map((b) => b.genre))].sort())),
   });
   protected readonly genreOptions = computed(() =>
     this.genres.hasValue() ? this.genres.value() : [],
@@ -105,7 +116,7 @@ export class Catalog {
   }
 
   protected onAddToCart(book: Book): void {
-    this.cartMessage.set(`“${book.title}” can't be added yet. The cart isn't built.`);
+    this.cart.add(book);
   }
 
   private setQuery(changes: { q?: string; genre?: string }, replaceUrl = false): void {
