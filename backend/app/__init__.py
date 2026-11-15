@@ -9,7 +9,8 @@ from flask_jwt_extended import JWTManager
 from app.extensions import db
 
 
-def create_app():
+def create_app(test_config=None):
+    """test_config overrides settings, e.g. an in-memory database for tests."""
     app = Flask(__name__)
 
     # SQLite database file stored in backend/instance/bookworm.db
@@ -18,10 +19,14 @@ def create_app():
         app.instance_path, "bookworm.db"
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SEED_BOOKS"] = True
 
     # Login tokens (FR-09). Set JWT_SECRET_KEY in backend/.env
     load_dotenv()
     app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "dev-only-change-me")
+
+    if test_config:
+        app.config.update(test_config)
     JWTManager(app)
     db.init_app(app)
 
@@ -35,6 +40,8 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     from app.routes.order_routes import orders_bp
     app.register_blueprint(orders_bp, url_prefix="/api/orders")
+    from app.routes.review_routes import reviews_bp
+    app.register_blueprint(reviews_bp, url_prefix="/api/reviews")
     from app.routes.assistant_routes import assistant_bp
     app.register_blueprint(assistant_bp, url_prefix="/api/assistant")
 
@@ -47,6 +54,7 @@ def create_app():
         from app import models  # noqa: F401  (registers the models)
         from app.seed import seed_books
         db.create_all()
-        seed_books()
+        if app.config["SEED_BOOKS"]:
+            seed_books()
 
     return app

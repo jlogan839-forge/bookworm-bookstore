@@ -13,7 +13,7 @@ MAX_PER_PAGE = 100
 
 
 def get_book(isbn):
-    return Book.query.get(isbn)
+    return db.session.get(Book, isbn)
 
 
 def _escape_like(text):

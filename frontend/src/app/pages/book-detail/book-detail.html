@@ -1,1 +1,175 @@
-<p>book-detail works!</p>
+<a routerLink="/" class="text-brand-700 underline dark:text-brand-100">← Back to catalog</a>
+
+@if (book.hasValue()) {
+  @let b = book.value();
+  <article class="mt-6 grid gap-8 md:grid-cols-[minmax(0,16rem)_1fr]">
+    <div class="relative aspect-[2/3] w-full max-w-64 overflow-hidden rounded-lg bg-brand-50 dark:bg-gray-800">
+      @if (b.coverUrl) {
+        <img [ngSrc]="b.coverUrl" fill sizes="16rem" priority [alt]="'Cover of ' + b.title" class="object-cover" />
+      } @else {
+        <div class="flex h-full items-center justify-center p-4 text-center font-serif text-lg text-brand-800 dark:text-brand-100" aria-hidden="true">
+          {{ b.title }}
+        </div>
+      }
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <h1 class="text-3xl font-semibold text-brand-800 dark:text-brand-100">{{ b.title }}</h1>
+      <p class="text-lg text-gray-700 dark:text-gray-300">{{ b.author }}</p>
+      <app-star-rating [rating]="b.averageRating" [count]="b.reviewCount" />
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        {{ b.genre }}@if (b.publicationYear) { · {{ b.publicationYear }} } · ISBN {{ b.isbn }}
+      </p>
+      <p class="mt-2 text-2xl font-semibold">{{ b.price | currency: 'USD' }}</p>
+      <p class="text-sm">{{ b.inStock ? 'In stock' : 'Out of stock' }}</p>
+      @if (b.description) {
+        <p class="mt-4 max-w-prose whitespace-pre-line text-gray-800 dark:text-gray-200">{{ b.description }}</p>
+      }
+    </div>
+  </article>
+} @else if (book.error()) {
+  <div role="alert" class="mt-6 rounded-lg border border-red-300 bg-red-50 p-6 text-red-900 dark:border-red-800 dark:bg-red-950 dark:text-red-100">
+    @if (bookNotFound()) {
+      <p class="font-medium">We couldn't find that book.</p>
+    } @else {
+      <p class="font-medium">We couldn't load this book.</p>
+      <p class="mt-1 text-sm">Make sure the backend is running at localhost:5001, then try again.</p>
+      <button type="button" (click)="book.reload()" class="mt-4 rounded bg-red-700 px-4 py-2 font-medium text-white hover:bg-red-800">
+        Retry
+      </button>
+    }
+  </div>
+} @else {
+  <p class="mt-6 text-gray-700 dark:text-gray-300" aria-live="polite">Loading book…</p>
+}
+
+@if (!book.error()) {
+  <section aria-labelledby="reviews-heading" class="mt-12 max-w-3xl">
+    <h2 #reviewsHeading id="reviews-heading" tabindex="-1" class="text-2xl font-semibold">Reviews</h2>
+
+    <p aria-live="polite" class="mt-2 text-sm font-medium text-brand-700 dark:text-brand-100">{{ status() }}</p>
+
+    @if (showForm()) {
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate
+            class="mt-4 space-y-4 rounded-lg border border-gray-200 p-4 dark:border-gray-800">
+        <h3 #formHeading tabindex="-1" class="text-lg font-semibold">
+          {{ editing() ? 'Edit your review' : 'Write a review' }}
+        </h3>
+
+        @if (formError()) {
+          <p role="alert" class="rounded border border-red-300 bg-red-50 p-3 text-red-800 dark:border-red-700 dark:bg-red-950 dark:text-red-200">
+            {{ formError() }}
+          </p>
+        }
+
+        <fieldset>
+          <legend class="font-medium">Rating</legend>
+          <div class="mt-1 flex gap-1">
+            @for (n of stars; track n) {
+              <label
+                class="cursor-pointer rounded px-1 text-3xl leading-none has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand-600"
+                [class]="n <= selectedRating() ? 'text-amber-600 dark:text-amber-400' : 'text-gray-400 dark:text-gray-500'"
+              >
+                <input type="radio" formControlName="rating" [value]="n" class="sr-only" />
+                <span aria-hidden="true">★</span>
+                <span class="sr-only">{{ n }} {{ n === 1 ? 'star' : 'stars' }}</span>
+              </label>
+            }
+          </div>
+        </fieldset>
+
+        <div>
+          <label for="review-text" class="block font-medium">Your review</label>
+          <textarea
+            id="review-text"
+            formControlName="reviewText"
+            rows="4"
+            [attr.maxlength]="maxLength"
+            aria-describedby="review-text-count"
+            class="mt-1 w-full rounded border border-gray-400 px-3 py-2 dark:border-gray-600 dark:bg-gray-900"
+          ></textarea>
+          <p id="review-text-count" class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            {{ textLength() }} / {{ maxLength }} characters
+          </p>
+        </div>
+
+        <div class="flex gap-3">
+          <button type="submit" [disabled]="saving()"
+                  class="rounded bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700 disabled:opacity-60">
+            {{ saving() ? 'Saving…' : editing() ? 'Save changes' : 'Post review' }}
+          </button>
+          @if (editing()) {
+            <button type="button" (click)="cancelEdit()"
+                    class="rounded border border-gray-400 px-4 py-2 font-medium hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800">
+              Cancel
+            </button>
+          }
+        </div>
+      </form>
+    } @else if (!isLoggedIn()) {
+      <p class="mt-4">
+        <a routerLink="/login" [queryParams]="{ returnUrl: '/books/' + isbn() }" class="text-brand-700 underline dark:text-brand-100">Log in</a>
+        to write a review.
+      </p>
+    }
+
+    @if (reviews.hasValue()) {
+      @if (reviewList().length === 0) {
+        <p class="mt-4 text-gray-700 dark:text-gray-300">No reviews yet.</p>
+      } @else {
+        <ul class="mt-6 space-y-6">
+          @for (review of reviewList(); track review.reviewId) {
+            @let mine = review.reviewId === myReview()?.reviewId;
+            <li class="border-b border-gray-200 pb-6 dark:border-gray-800">
+              <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <p class="font-semibold">{{ review.reviewerName }}@if (mine) { <span class="font-normal text-gray-600 dark:text-gray-400"> (you)</span> }</p>
+                <app-star-rating [rating]="review.rating" />
+                @if (review.reviewDate) {
+                  <p class="text-sm text-gray-600 dark:text-gray-400">{{ review.reviewDate | date: 'mediumDate' }}</p>
+                }
+              </div>
+              <p class="mt-2 whitespace-pre-line text-gray-800 dark:text-gray-200">{{ review.reviewText }}</p>
+
+              @if (mine && !editing()) {
+                @if (formError() && confirmingDelete()) {
+                  <p role="alert" class="mt-3 text-sm text-red-800 dark:text-red-200">{{ formError() }}</p>
+                }
+                @if (confirmingDelete()) {
+                  <div class="mt-3 flex flex-wrap items-center gap-3">
+                    <p class="text-sm">Delete your review? This can't be undone.</p>
+                    <button type="button" (click)="deleteMyReview()" [disabled]="saving()"
+                            class="rounded bg-red-700 px-3 py-1 text-sm font-medium text-white hover:bg-red-800 disabled:opacity-60">
+                      Yes, delete
+                    </button>
+                    <button type="button" (click)="confirmingDelete.set(false)"
+                            class="rounded border border-gray-400 px-3 py-1 text-sm font-medium hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800">
+                      Cancel
+                    </button>
+                  </div>
+                } @else {
+                  <div class="mt-3 flex gap-3">
+                    <button type="button" (click)="startEdit(review)"
+                            class="rounded border border-gray-400 px-3 py-1 text-sm font-medium hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800">
+                      Edit<span class="sr-only"> your review</span>
+                    </button>
+                    <button type="button" (click)="confirmingDelete.set(true)"
+                            class="rounded border border-red-700 px-3 py-1 text-sm font-medium text-red-800 hover:bg-red-50 dark:border-red-400 dark:text-red-200 dark:hover:bg-red-950">
+                      Delete<span class="sr-only"> your review</span>
+                    </button>
+                  </div>
+                }
+              }
+            </li>
+          }
+        </ul>
+      }
+    } @else if (reviews.error()) {
+      <div role="alert" class="mt-4">
+        <p>We couldn't load the reviews.</p>
+        <button type="button" (click)="reviews.reload()" class="mt-2 text-brand-700 underline dark:text-brand-100">Retry</button>
+      </div>
+    } @else {
+      <p class="mt-4 text-gray-700 dark:text-gray-300">Loading reviews…</p>
+    }
+  </section>
+}

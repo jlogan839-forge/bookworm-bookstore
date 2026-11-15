@@ -33,6 +33,7 @@
     </h2>
     <p class="text-sm text-gray-700 dark:text-gray-300">{{ b.author }}</p>
     <p class="text-sm text-gray-600 dark:text-gray-400">{{ b.genre }}</p>
+    <app-star-rating [rating]="b.averageRating" [count]="b.reviewCount" />
 
     <div class="mt-auto flex items-center justify-between gap-2 pt-3">
       <span class="text-lg font-semibold">{{ b.price | currency: 'USD' }}</span>
