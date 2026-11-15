@@ -15,8 +15,13 @@ class Book(db.Model):
     description = db.Column(db.Text)
     cover_url = db.Column(db.String(500))
 
-    def get_details(self):
-        """Return the book as a dictionary for JSON responses."""
+    def get_details(self, rating=None):
+        """Return the book as a dictionary for JSON responses.
+
+        rating is (average, count) from review_service.rating_summaries(), or None
+        when the book has no reviews.
+        """
+        average, count = rating if rating else (None, 0)
         return {
             "isbn": self.isbn,
             "title": self.title,
@@ -28,6 +33,9 @@ class Book(db.Model):
             "inStock": self.check_availability(),
             "description": self.description,
             "coverUrl": self.cover_url,
+            # FR-12: average star rating, 1 decimal place. None means no reviews yet.
+            "averageRating": round(average, 1) if average is not None else None,
+            "reviewCount": count,
         }
 
     def check_availability(self):
