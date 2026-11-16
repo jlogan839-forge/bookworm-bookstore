@@ -144,7 +144,7 @@ The app runs at http://localhost:4200.
 - Full details: [frontend/AGENTS.md](frontend/AGENTS.md#api-access-bookworm-convention).
 
 **Other rules**
-- If you install a new Python package, update requirements: `pip freeze > requirements.txt`. Tell the group in chat.
+- If you install a new Python package, add its name to backend/`requirements.txt` (one per line). Tell the group in chat.
 - If you install a new npm package, `package.json` updates automatically. Tell the group in chat.
 - Never commit API keys. Keys go in `backend/.env`, which is ignored by Git.
 - Record any AI use in the AI usage section of this README.
