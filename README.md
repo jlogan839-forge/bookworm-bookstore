@@ -12,10 +12,10 @@ Group 2 project for SWE 6623: Jack Snodgrass, Amara Bush, Sam Corella, Duane Mit
 - **Backend:** Python / Flask (routes, business logic, and data access layers)
 - **Database:** SQLite via Flask-SQLAlchemy
 
-## Changes from orginal proposal
+## Changes from original proposal
 
 - Changed from Google Gemini to Claude API because group already has existing account/access
-- Backend port changed from default 5000 to 50001 because macOS uses port 500 for AirPlay.
+- Backend port changed from default 5000 to 5001 because macOS uses port 5000 for AirPlay.
 - Added 6% sales tax to checkout
 - 
 
@@ -160,16 +160,13 @@ The app runs at http://localhost:4200.
 
 ## AI Usage
 
-- Claude Code Opus 5.5 used to generate stub pages for project, based on requirements from our previous work and reviewed by Jack Snodgrass.
+- Backend starter and class stubs: Claude (Claude Opus 5.5) wrote the Flask app setup, the Book model, the catalog service, the book routes, the sample data, and stubs for every class and method in our UML diagram. Reviewed and set up by Jack Snodgrass.
+- App shell (`feature/app-shell`): Claude (Claude Opus 5.5) wrote the routes, header, footer, dark mode toggle, skip link, and Tailwind theme. Jack Snodgrass entered, reviewed, and tested the code.
+- Accounts (`feature/accounts`): Claude (Claude Opus 5.5) walked Jack Snodgrass through the code step by step: Customer.register and Customer.login, the auth service and routes, JWT login tokens, AuthService, the token interceptor, and the login, sign-up, and account pages. Jack entered each piece, fixed errors, and tested it.
+- Checkout page (`feature/checkout-page`): Claude (Claude Opus 5.5) wrote the shared CartService, the OrderService, and the checkout page. Jack Snodgrass entered, debugged, and tested them.
+- AI reading assistant (`feature/assistant`): Claude (Claude Opus 5.5) walked Jack Snodgrass through the code step by step: the Claude API service, the assistant route, AssistantService, and the chat page. Jack entered, debugged, and tested it.
 - Catalog page (`feature/catalog`): Claude Code (Claude Opus 5.5) generated the catalog page, book card component, `BookService`, `Book` API type, their unit tests, and the frontend conventions sections in this README and `frontend/AGENTS.md`, based on a plan reviewed by Sam Corella.
-- Claude Code Opus 5.5 to review code and flag gaps for me to review/revise (Jack Snodgrass):
-  - frontend/src/layout/header/header.ts
-  - front/end/src/pages/account/account.ts
-  - front/end/src/pages/account/login.ts
-  - front/end/src/pages/account/register.ts
-- Payment and checkout design by Amara Bush: 6% sales tax, validation,
-  transaction IDs. Adapted into our model/service/route structure with Claude Code, Opus 5.5.
-- Chat assistant built, debugged, and tested by Jack Snodgrass, used Claude Code Opus 5.5 to review and flag inconsistencies.
+- Payment and checkout design by Amara Bush: 6% sales tax, validation, transaction IDs. Adapted into our model/service/route structure with Claude Code, Opus 5.5.
 - Book catalog import (`feature/book-import`): Claude Code (Claude Opus 5.5) wrote the Open Library importer, the `import_books.py` script, the JSON-based seeding, the assistant's random catalog sample, and the Book catalog section of this README, based on a plan reviewed by Sam Corella.
 - Catalog pagination (`feature/catalog-pagination`): Claude Code (Claude Opus 5.5) wrote the combined search and genre filter, pagination, and genres endpoint in the backend, the matching `BookService`, `Book` API type, and catalog page changes, their unit tests, and the API table updates in this README, based on a plan reviewed by Sam Corella.
 - Book reviews (`feature/reviews`): Claude Code (Claude Opus 5.5) implemented `submit_review`, `edit_review`, and `delete_review`, the review service and endpoints, average ratings on book responses, the backend pytest setup and tests, the book detail page with the review form, the star rating component, `ReviewService`, the `Review` API type, their unit tests, and the README updates, based on a plan reviewed by Sam Corella.
