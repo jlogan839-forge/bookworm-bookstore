@@ -223,3 +223,5 @@ backend/instance/
 *.db
 
 .DS_Store
+# Open Library import cache (scripts/import_books.py)
+backend/scripts/.cache/

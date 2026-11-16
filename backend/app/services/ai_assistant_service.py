@@ -5,6 +5,8 @@ Key stored in backend/.env as ANTHROPIC_API_KEY and never sent to the frontend.
 import json
 import os
 
+from sqlalchemy import func
+
 from app.models import Book
 
 MODEL = "claude-haiku-5-5"
@@ -36,8 +38,14 @@ def recommend_books(user_message):
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise AssistantError("The reading assistant isn't set up on this computer.")
 
-    # Builds the list of books for Clause to choose from (in-stock books only)
-    books = Book.query.filter(Book.stock_qty > 0).limit(MAX_BOOKS).all()
+    # Builds the list of books for Claude to choose from (in-stock books only).
+    # A random sample, so every genre has a chance to appear, not just the first rows.
+    books = (
+        Book.query.filter(Book.stock_qty > 0)
+        .order_by(func.random())
+        .limit(MAX_BOOKS)
+        .all()
+    )
     catalog = {b.isbn: b for b in books}
     catalog_text = "\n".join(
         f"- ISBN {b.isbn}: {b.title} by {b.author} ({b.genre})" for b in books
