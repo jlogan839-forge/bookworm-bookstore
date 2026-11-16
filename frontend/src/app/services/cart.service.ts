@@ -1,10 +1,11 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 
 export interface CartItem {
   isbn: string;
   title: string;
   price: number;
   quantity: number;
+  stockQty: number;
 }
 
 const CART_KEY = 'bookworm_cart';
@@ -18,11 +19,11 @@ export class CartService {
   readonly count = computed(() => this.items().reduce((sum, i) => sum + i.quantity, 0));
 
   // Price before tax (the server adds tax at checkout)
-  readonly subtotal = computed(() =>
-    Math.round(this.items().reduce((sum, i) => sum + i.price * i.quantity, 0) * 100) / 100,
+  readonly subtotal = computed(
+    () => Math.round(this.items().reduce((sum, i) => sum + i.price * i.quantity, 0) * 100) / 100,
   );
 
-  add(book: { isbn: string; title: string; price: number }, quantity = 1) {
+  add(book: { isbn: string; title: string; price: number; stockQty: number }, quantity = 1) {
     const existing = this.items().find((i) => i.isbn === book.isbn);
     if (existing) {
       this.updateQuantity(book.isbn, existing.quantity + quantity);
@@ -36,7 +37,11 @@ export class CartService {
       this.remove(isbn);
       return;
     }
-    this.save(this.items().map((i) => (i.isbn === isbn ? { ...i, quantity } : i)));
+    this.save(
+      this.items().map((i) =>
+        i.isbn === isbn ? { ...i, quantity: Math.min(quantity, i.stockQty) } : i,
+      ),
+    );
   }
 
   remove(isbn: string) {
@@ -49,10 +54,16 @@ export class CartService {
 
   private save(items: CartItem[]) {
     this.items.set(items);
-    try { localStorage.setItem(CART_KEY, JSON.stringify(items)); } catch {}
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(items));
+    } catch {}
   }
 
   private load(): CartItem[] {
-    try { return JSON.parse(localStorage.getItem(CART_KEY) ?? '[]'); } catch { return []; }
+    try {
+      return JSON.parse(localStorage.getItem(CART_KEY) ?? '[]');
+    } catch {
+      return [];
+    }
   }
 }

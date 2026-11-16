@@ -1,1 +1,60 @@
-<p>cart works!</p>
+<h1 class="mb-6 text-2xl font-semibold">Your cart</h1>
+
+<ul class="divide-y divide-gray-200 dark:divide-gray-800">
+  @for (item of cart.items(); track item.isbn) {
+    <li class="flex items-center justify-between py-4">
+      <div>
+        <p class="font-medium">{{ item.title }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Qty {{ item.quantity }}</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <span>{{ item.price * item.quantity | currency }}</span>
+
+        @if (editing() === item.isbn) {
+          <label class="sr-only" [for]="'qty-' + item.isbn">Quantity for {{ item.title }}</label>
+          <input
+            type="number"
+            min="1"
+            [max]="item.stockQty"
+            [id]="'qty-' + item.isbn"
+            [value]="item.quantity"
+            (change)="saveQuantity(item.isbn, $event)"
+            (keydown.enter)="saveQuantity(item.isbn, $event); editing.set(null)"
+            class="w-16 rounded border border-gray-300 px-2 py-1 dark:border-gray-600 dark:bg-gray-900"
+          />
+
+          <button type="button" (click)="editing.set(null)" class="text-sm hover:underline">
+            Done
+          </button>
+        } @else {
+          <button
+            type="button"
+            (click)="editing.set(item.isbn)"
+            class="text-sm text-green-700 hover:underline dark:text-green-400"
+          >
+            Edit
+          </button>
+        }
+
+        <button
+          type="button"
+          (click)="cart.remove(item.isbn)"
+          class="text-sm text-red-600 hover:underline dark:text-red-400"
+        >
+          Remove
+        </button>
+      </div>
+    </li>
+  } @empty {
+    <li class="py-4 text-gray-600 dark:text-gray-400">Your cart is empty.</li>
+  }
+</ul>
+
+<div class="mt-6 flex flex-col items-end gap-3">
+  <p class="text-lg font-semibold">Total: {{ cart.subtotal() | currency }}</p>
+  <a
+    routerLink="/checkout"
+    class="rounded bg-brand-600 px-6 py-2 font-semibold text-white hover:bg-brand-800"
+    >Pay Now</a
+  >
+</div>

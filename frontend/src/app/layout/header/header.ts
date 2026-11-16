@@ -21,14 +21,18 @@ export class Header {
 
   constructor() {
     let saved: string | null = null;
-    try { saved = localStorage.getItem('theme'); } catch {}
+    try {
+      saved = localStorage.getItem('theme');
+    } catch {}
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     this.setDark(saved ? saved === 'dark' : prefersDark);
   }
 
   toggleTheme() {
     this.setDark(!this.isDark());
-    try { localStorage.setItem('theme', this.isDark() ? 'dark' : 'light'); } catch {}
+    try {
+      localStorage.setItem('theme', this.isDark() ? 'dark' : 'light');
+    } catch {}
   }
 
   private setDark(dark: boolean) {

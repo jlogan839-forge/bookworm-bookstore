@@ -1,5 +1,12 @@
 import { ViewportScroller } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +15,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { Book, BookPage } from '../../api/book';
 import { BookCard } from '../../components/book-card/book-card';
 import { BookService } from '../../services/book.service';
+import { CartService } from '../../services/cart.service';
 
 /**
  * FR-01 (search) and FR-02 (browse by genre), one page at a time.
@@ -25,6 +33,7 @@ export class Catalog {
   private readonly bookService = inject(BookService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  cart = inject(CartService);
   private readonly scroller = inject(ViewportScroller);
 
   private readonly queryParams = toSignal(this.route.queryParamMap, { requireSync: true });
@@ -128,7 +137,8 @@ export class Catalog {
   }
 
   protected onAddToCart(book: Book): void {
-    this.cartMessage.set(`“${book.title}” can't be added yet. The cart isn't built.`);
+    this.cart.add(book);
+    this.cartMessage.set(`${book.title} is added to the cart.`);
   }
 
   /** Change the search or genre. Either change starts the results over at page 1. */
